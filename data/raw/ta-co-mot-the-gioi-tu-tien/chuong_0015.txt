@@ -1,0 +1,105 @@
+Chương 15: Giao dịch ảo
+
+Khách nhân, nếu thông tin không có sai sót, tại hạ sẽ đóng dấu mộc hành nghề của mình lên.
+
+Trong cửa hàng, sau khi Ngô Vạn đưa cho Trần Mạc Bạch tấm giấy chứng nhận cứng đã điền thông tin chủ sở hữu pháp khí để xác nhận, hắn trịnh trọng mở một chiếc tủ sắt, lấy ra một con dấu màu đỏ. Không cần chấm mực, hắn trực tiếp đóng một dấu lên giấy chứng nhận, con dấu hình bầu dục màu đỏ thẫm của Giám Bảo Sư nhất giai liền hiện ra trên đó.
+
+Chính giữa con dấu là tên của Ngô Vạn được viết bằng giai thể tự, nửa vòng cung phía trên là dòng chữ “Giám Bảo Sư nhất giai”, còn nửa vòng cung phía dưới là một dãy ký tự nối liền nhau.
+
+“Dãy ký tự này chính là mã chống làm giả được tạo ngẫu nhiên mỗi khi đóng dấu. Sau khi ta chụp ảnh giấy chứng nhận này đăng ký lên chợ giao dịch trực tuyến Tiên Môn, bất kỳ ai nhập dãy ký tự này vào đều có thể xem được ảnh chụp của giấy chứng nhận.”
+
+Trần Mạc Bạch nhận lấy hộp châm và giấy chứng nhận, đầu tiên hắn dùng điện thoại di động của mình tra thử, lại phát hiện giao diện hiện ra là một khoảng trống trơn, không khỏi lộ vẻ vô cùng nghi hoặc.
+
+“Ta còn chưa tải lên mà?”
+
+Ngô Vạn dở khóc dở cười, nhưng lập tức dùng tài khoản của mình đăng nhập vào kho lưu trữ văn bản điện tử của Giám Bảo Sư trên chợ giao dịch trực tuyến Tiên Môn, rồi tải ảnh chụp giấy chứng nhận của hộp châm lên.
+
+Trần Mạc Bạch thử lại một lần nữa, cuối cùng giao diện tương ứng cũng đã xuất hiện.
+
+“Ngô đại sư, vất vả cho ngài rồi.”
+
+Sau khi hài lòng thanh toán xong 200 điểm thiện công, Trần Mạc Bạch nhận lấy hộp châm.
+
+“Tiểu Trần à, nếu ngươi muốn bán pháp khí này, có thể treo bán ở cửa hàng của ta, cũng coi như giúp ta tích lũy chút điểm tích lũy. Nếu ngươi đồng ý, ta không những có thể hoàn lại thiện công cho ngươi, mà thậm chí còn bổ sung pháp quyết tế luyện và sử dụng cho pháp khí này miễn phí giúp ngươi.”
+
+Lúc điền thông tin chủ sở hữu pháp khí vừa rồi, Ngô Vạn đã biết tên của Trần Mạc Bạch. Biết Ngô Vạn vẫn còn là một học sinh, chỉ mới 18 tuổi, kinh nghiệm xã hội không nhiều, trong lòng hắn chợt nảy ra một ý nghĩ.
+
+Trong Tiên Môn, do tài nguyên khan hiếm, về cơ bản mỗi người sau khi bước chân vào con đường tu hành đều sẽ phiền não vì linh khí và vật tư. Rất nhiều người trong số họ vì kiếm tiền sẽ dựa vào chợ giao dịch trực tuyến Tiên Môn, mở cửa hàng trực tuyến cá nhân.
+
+Ngô Vạn tuy đã thi đậu chứng chỉ Giám Bảo Sư nhất giai, trong giới tu sĩ Luyện Khí cũng coi như có máu mặt, nhưng vẫn đang phải bôn ba vì tài nguyên Trúc Cơ.
+
+Ngoài cửa hàng gia truyền này, ngày thường hắn cũng tự mình luyện khí.
+
+Dù sao nghề Giám Bảo Sư cũng không kiếm được nhiều tiền, hơn nữa, mỗi một tu sĩ học kiến thức giám bảo, ban đầu chắc chắn đều ôm mộng trở thành một Luyện Khí Sư.
+
+Mà các cửa hàng cá nhân trên chợ giao dịch trực tuyến Tiên Môn đều dựa vào việc mua bán thiện công ra vào để tích lũy điểm tích lũy. Điểm tích lũy càng nhiều thì càng có thể đổi được huyền công bí pháp, linh đan pháp khí từ phía Tiên Môn.
+
+Tiên Môn chấp chưởng Địa Nguyên Tinh, lại tuân theo trật tự của văn minh trước đó, mặc dù có Hóa Thần lão tổ trấn áp thiên địa, nhưng vẫn mấy lần xảy ra khủng hoảng kinh tế.
+
+Chủ yếu vẫn là do linh thạch không đủ dùng. Vào thời điểm chiến tranh khai thác, hễ trong tài khoản của các tu sĩ có thiện công là họ lập tức đến ngân hàng đổi thành linh thạch. Dù bản thân dùng không hết cũng muốn tích trữ lại, để dành cho hậu nhân.
+
+Cứ như vậy, ngân hàng quốc gia dù có dự trữ bao nhiêu linh thạch cũng không chịu nổi cảnh hơn trăm triệu tu sĩ tranh nhau đổi.
+
+Khủng hoảng kinh tế liền ập đến.
+
+Mặc dù Tiên Môn lần lượt ban bố pháp lệnh, nào là cấm đổi linh thạch, nào là tăng giá quy đổi, thậm chí còn nghĩ ra bí thuật làm khô kiệt linh thạch rồi một lần nữa rót linh khí vào để khôi phục, nhưng quy luật vận hành của kinh tế thị trường, dẫu cho Hóa Thần lão tổ có được uy lực ngút trời cũng không có cách nào xóa bỏ.
+
+Có điều, ba điện bốn bộ dưới trướng Tiên Môn qua mấy ngàn năm đã chiêu mộ vô số thiên tài trên Địa Nguyên Tinh, những bậc kỳ tài trí tuệ thông thiên nhiều không kể xiết.
+
+Ngàn năm trước, có người đề xuất mở kho tàng 84.000 bộ đạo thư của thư viện quốc gia Tiên Môn, cho phép tất cả tu sĩ dùng điểm tích lũy tùy ý đổi lấy. Mà điểm tích lũy này, phải dùng thiện công tiêu phí trên thị trường Tiên Môn mới có thể nhận được.
+
+Ví dụ như Trần Mạc Bạch mua ba tấm Thanh Tiễn Phù trên mạng, tốn 105 điểm thiện công, thì trên hộ tịch cá nhân của hắn sẽ có thêm 105 điểm tích lũy.
+
+Chính sách này vừa ban hành, thị trường kinh tế vốn là một vũng nước tù không lưu thông của Tiên Môn lập tức trở nên sôi động. Chỉ trong vòng mười năm, 90% linh thạch tích trữ trong dân gian lại một lần nữa chảy về ngân hàng quốc gia, thay vào đó là điểm thiện công trên tài khoản của mỗi người.
+
+Giao dịch trực tiếp cũng có thể nhận được điểm tích lũy, nhưng cả bên mua và bên bán đều phải nộp thuế cho cục thuế vụ Tiên Môn.
+
+Ví dụ như Trần Mạc Bạch đưa cho Ngô Vạn 200 thiện công phí giám định, nếu muốn đổi thành điểm tích lũy, cần phải nộp cho Tiên Môn 20% thuế tiêu dùng. Thực ra, khoản thuế 20% này là do hai bên mua bán mỗi người chịu 10%, nhưng người nhận tiền chắc chắn sẽ không muốn chịu khoản này. Trừ phi Trần Mạc Bạch chịu thêm 20 điểm thiện công cho Ngô Vạn, thì Ngô Vạn mới đồng ý đến cục thuế vụ cùng với hắn.
+
+Dù sao, chỉ có tiêu phí mới có điểm tích lũy, nhận tiền thì không có.
+
+Cho nên trên thị trường Tiên Môn, trước khi giao dịch, người ta đều sẽ xác nhận xem người tiêu dùng có cần điểm tích lũy hay không. Nếu cần, khoản thuế này cũng sẽ được cộng trước vào tổng giá trị.
+
+Chính vì vậy, việc nộp thuế, Tiên Môn cũng không bắt buộc, hoàn toàn dựa vào tự nguyện.
+
+Nhưng Trần Mạc Bạch hiển nhiên không phải loại người đó.
+
+Hắn vẫn chưa đến lúc cần điểm tích lũy.
+
+“Ngô đại sư, lời này của ngài là có ý gì, ta nghe không hiểu?”
+
+Trần Mạc Bạch có chút kỳ quái, người tiêu dùng mới có điểm tích lũy, cho dù pháp khí này của mình có bán được ở cửa hàng của Ngô Vạn thì cũng chẳng liên quan gì đến Ngô Vạn cả mà?
+
+“Ta là Giám Bảo Sư, dựa vào bản lĩnh của mình kiếm tiền là chuyện rất bình thường. Nếu ngươi bán pháp khí này cho ta, sau đó ta lại dùng kiến thức chuyên môn của mình để bổ sung pháp quyết tế luyện và sử dụng cho hộp châm, như vậy giá bán ra tự nhiên sẽ cao hơn một chút, ta nói có đúng không?”
+
+Sau khi Ngô Vạn mỉm cười nói xong, Trần Mạc Bạch giật cả mình, một luồng khí lạnh chạy dọc sống lưng.
+
+“Ngô đại sư, ngài làm vậy chính là giao dịch ảo, là vi phạm pháp luật.”
+
+Vì điểm tích lũy, giao dịch ảo là chuyện thường xảy ra. Mặc dù phải nộp thuế cho Tiên Môn, nhưng lại có thể khiến một món pháp khí sinh ra điểm tích lũy từ hai lần giao dịch.
+
+Trong các cửa hàng chính hãng của chợ giao dịch trực tuyến Tiên Môn, cách một khoảng thời gian đều sẽ có linh đan diệu dược giúp tăng tỷ lệ Trúc Cơ thành công được đưa ra để tranh mua đấu giá, cũng cần dùng điểm tích lũy để đổi.
+
+Ngô Vạn đã lên kế hoạch cho việc này, tích góp cũng đã một thời gian không ít.
+
+Nhưng hành vi này, cũng giống như hành vi trốn thuế, lách thuế trong nền văn minh máy móc trước kia của Địa Nguyên Tinh, một khi bị bắt được, Tiên Môn sẽ phạt cho tu sĩ đến mức táng gia bại sản mới thôi.
+
+“Rất nhiều người đều làm như vậy, Tiên Môn vì muốn kinh tế lưu thông, đối với chuyện này đều nhắm một mắt mở một mắt. Nếu cuối năm thu thuế ít, bề trên không hài lòng, cũng chỉ nhằm vào mấy kẻ lắm tiền nhiều của mà ra tay thôi, ngươi cứ yên tâm.”
+
+“Nếu ngươi đồng ý, ta đảm bảo hộp châm này của ngươi có thể bán được hơn 80.000 thiện công.”
+
+Thấy Trần Mạc Bạch có chút do dự, Ngô Vạn lại tăng thêm con bài. Hắn tuy trông còn trẻ, nhưng đã 45 tuổi, nếu không thử Trúc Cơ, cơ hội thành công sau này sẽ ngày càng nhỏ.
+
+Tháng sau, trên cửa hàng chính hãng của Tiên Môn sẽ tung ra một lô Hộ Mạch Đan, Thăng Linh Tán, Ngưng Khí Dịch, đều là linh dược giúp tăng tỷ lệ Trúc Cơ.
+
+Ngô Vạn còn thiếu 300.000 điểm tích lũy nữa là có thể giành được một loại trong số đó.
+
+Nếu là ngày thường, hắn tự nhiên không dám thực hiện giao dịch ảo, lừa gạt điểm tích lũy. Nhưng bây giờ đại đạo đang ở ngay trước mắt, trong tay lại có chút cấp bách, bất kỳ cơ hội nào có thể kiếm được điểm tích lũy, hắn đều muốn thử một phen.
+
+Vạn nhất hắn vận khí tốt, Trúc Cơ thành công thì sao!
+
+“Pháp khí này là đồ gia truyền, nếu muốn bán đi, ta cũng phải xin phép trưởng bối trong nhà.”
+
+Trần Mạc Bạch là một học sinh ngoan, khéo léo từ chối.
+
+Ngô Vạn cũng không nói thêm gì, chỉ lộ vẻ tiếc nuối. Dù sao hắn cũng chỉ là thấy Trần Mạc Bạch còn trẻ, nên thử xem có lừa gạt được một chút không.
