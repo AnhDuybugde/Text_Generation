@@ -2,11 +2,12 @@ import os
 from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
-    TextDataset,
     DataCollatorForLanguageModeling,
     Trainer,
     TrainingArguments
 )
+import torch
+from torch.utils.data import Dataset
 
 # ==========================================
 # CẤU HÌNH FINE-TUNING ĐỂ CHẠY TRÊN COLAB
@@ -24,6 +25,24 @@ GRADIENT_ACCUMULATION = 4
 LEARNING_RATE = 5e-5 # Learning rate thường nhỏ hơn nhiều khi Fine-Tune so với Train from scratch
 # ==========================================
 
+class CustomTextDataset(Dataset):
+    def __init__(self, file_path, tokenizer, block_size=512):
+        print("    [Dataset] Đang tokenizing toàn bộ text...")
+        with open(file_path, 'r', encoding='utf-8') as f:
+            text = f.read()
+            
+        tokens = tokenizer.encode(text)
+        self.examples = []
+        for i in range(0, len(tokens) - block_size + 1, block_size):
+            self.examples.append(torch.tensor(tokens[i:i + block_size], dtype=torch.long))
+        print(f"    [Dataset] Đã đóng gói được {len(self.examples)} block.")
+        
+    def __len__(self):
+        return len(self.examples)
+        
+    def __getitem__(self, idx):
+        return self.examples[idx]
+
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     
@@ -34,10 +53,9 @@ def main():
     model = GPT2LMHeadModel.from_pretrained(MODEL_NAME)
     
     print("[*] Chuẩn bị đóng gói Corpus (Quá trình này băm nhỏ corpus.txt thành chunks)...")
-    # Sử dụng TextDataset để đọc file text linh hoạt, bỏ qua dataset.pt trước đó (vì tokenizer giờ đã khác)
-    dataset = TextDataset(
-        tokenizer=tokenizer,
+    dataset = CustomTextDataset(
         file_path=DATA_PATH,
+        tokenizer=tokenizer,
         block_size=512
     )
     
