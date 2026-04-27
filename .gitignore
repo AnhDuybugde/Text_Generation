@@ -1,0 +1,34 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# ===== Sensitive =====
+.env
+
+# ===== Data (too large for git) =====
+data/raw/
+data/processed/corpus.txt
+data.zip
+models.zip
+
+# ===== Model weights (too large for git) =====
+models/finetuned_checkpoint/
+models/tokenizer/
+gpt2-epoch-10/
+
+# ===== Temp files =====
+temp_media/
+*.log
+training_error.txt
+out.log
+
+# ===== IDE =====
+.vscode/
+.idea/
+
+# ===== Debug =====
+scraper/debug_*.html
+scraper/test_output.txt

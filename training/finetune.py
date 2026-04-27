@@ -1,4 +1,11 @@
 import os
+import sys
+import io
+
+# Cố định encoding UTF-8 để khắc phục lỗi Crash (UnicodeEncodeError) trên màn hình CMD/Powershell của Windows
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 from transformers import (
     GPT2LMHeadModel,
     GPT2Tokenizer,
@@ -67,7 +74,6 @@ def main():
     # Cấu hình huấn luyện bằng API mạnh mẽ của Hugging Face
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
-        overwrite_output_dir=True,
         num_train_epochs=EPOCHS,
         per_device_train_batch_size=BATCH_SIZE,
         gradient_accumulation_steps=GRADIENT_ACCUMULATION,

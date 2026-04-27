@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
 import sys
 import io
 import torch
@@ -10,10 +12,14 @@ import uuid
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 from transformers import PreTrainedTokenizerFast, GPT2LMHeadModel
+
+# Đường dẫn tới thư mục web frontend
+WEB_DIR = os.path.join(os.path.dirname(__file__), "..", "web")
 
 warnings.filterwarnings("ignore")
 
@@ -191,7 +197,7 @@ async def generate_image(req: ImageRequest):
 Style: Epic fantasy painting, dramatic lighting, mystical atmosphere, vibrant colors, detailed character design with flowing robes and ancient weapons."""
 
         response = client.models.generate_content(
-            model="gemini-2.0-flash-preview-image-generation",
+            model="gemini-2.5-flash-image",
             contents=image_prompt,
             config=genai.types.GenerateContentConfig(
                 response_modalities=["TEXT", "IMAGE"]
@@ -230,6 +236,17 @@ async def list_voices():
             {"id": "vi-VN-NamMinhNeural", "name": "Nam Minh (Nam)", "gender": "male"},
         ]
     }
+
+# ============== PHỤC VỤ GIAO DIỆN WEB ================
+# Mount thư mục static (css, js)
+app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
+
+# Trang chủ: trả về index.html
+@app.get("/", response_class=HTMLResponse)
+async def serve_homepage():
+    index_path = os.path.join(WEB_DIR, "index.html")
+    with open(index_path, "r", encoding="utf-8") as f:
+        return HTMLResponse(content=f.read())
 
 if __name__ == "__main__":
     import uvicorn
