@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiên Đạo Kỷ Nguyên - AI Tạo Sinh Tiểu Thuyết</title>
-    <!-- Use modern fonts -->
+    <meta name="description" content="Nền tảng AI tạo sinh tiểu thuyết Kiếm Hiệp & Tu Tiên tiếng Việt với hình ảnh minh họa và giọng đọc">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -20,6 +20,7 @@
             <p class="subtitle">AI Text Generation Platform - Wuxia & Xianxia</p>
         </header>
 
+        <!-- PANEL 1: SINH VĂN BẢN -->
         <div class="glass-panel main-panel">
             <div class="input-section">
                 <label for="prompt-input" class="section-label">Câu mồi (Prompt)</label>
@@ -37,7 +38,7 @@
                 </div>
 
                 <button id="generate-btn" class="generate-btn">
-                    <span class="btn-text">Vận Công Sinh Chữ</span>
+                    <span class="btn-text">⚔️ Vận Công Sinh Chữ</span>
                     <span class="loader" id="loader"></span>
                 </button>
             </div>
@@ -46,6 +47,41 @@
                 <label class="section-label">Kết Quả Diễn Biến</label>
                 <div id="output-box" class="output-box">
                     <p class="placeholder-text">Truyền vào đạo vận để xuất hiện nội dung...</p>
+                </div>
+
+                <!-- THANH CÔNG CỤ: ĐỌC + VẼ -->
+                <div class="action-toolbar" id="action-toolbar" style="display: none;">
+                    <!-- Giọng đọc -->
+                    <div class="toolbar-group">
+                        <select id="voice-select" class="voice-select">
+                            <option value="vi-VN-HoaiMyNeural">🎙️ Hoài My (Nữ)</option>
+                            <option value="vi-VN-NamMinhNeural">🎙️ Nam Minh (Nam)</option>
+                        </select>
+                        <button id="tts-btn" class="action-btn tts-btn" title="Đọc to nội dung">
+                            <span class="btn-icon">🔊</span>
+                            <span>Đọc Truyện</span>
+                        </button>
+                    </div>
+                    <!-- Sinh ảnh -->
+                    <div class="toolbar-group">
+                        <button id="image-btn" class="action-btn image-btn" title="Tạo ảnh minh họa">
+                            <span class="btn-icon">🎨</span>
+                            <span>Vẽ Minh Họa</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Audio Player -->
+                <div id="audio-container" class="audio-container" style="display: none;">
+                    <audio id="audio-player" controls class="audio-player"></audio>
+                </div>
+
+                <!-- Ảnh minh họa -->
+                <div id="image-container" class="image-container" style="display: none;">
+                    <label class="section-label" style="margin-top: 12px;">🖼️ Ảnh Minh Họa</label>
+                    <div class="image-wrapper">
+                        <img id="generated-image" alt="Ảnh minh họa tiểu thuyết" class="generated-image">
+                    </div>
                 </div>
             </div>
         </div>

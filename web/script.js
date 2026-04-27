@@ -1,112 +1,166 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const promptInput = document.getElementById('prompt-input');
-    const tempSlider = document.getElementById('temp-slider');
-    const tempVal = document.getElementById('temp-val');
-    const lengthSlider = document.getElementById('length-slider');
-    const lengthVal = document.getElementById('length-val');
-    const generateBtn = document.getElementById('generate-btn');
-    const btnText = document.querySelector('.btn-text');
-    const loader = document.getElementById('loader');
-    const outputBox = document.getElementById('output-box');
+const API_BASE = "http://localhost:8000";
 
-    // Update slider values
-    tempSlider.addEventListener('input', (e) => tempVal.textContent = e.target.value);
-    lengthSlider.addEventListener('input', (e) => lengthVal.textContent = e.target.value);
+// ===================== DOM ELEMENTS =====================
+const promptInput = document.getElementById("prompt-input");
+const generateBtn = document.getElementById("generate-btn");
+const outputBox = document.getElementById("output-box");
+const loader = document.getElementById("loader");
+const tempSlider = document.getElementById("temp-slider");
+const tempVal = document.getElementById("temp-val");
+const lengthSlider = document.getElementById("length-slider");
+const lengthVal = document.getElementById("length-val");
 
-    // Typing Effect Logic
-    let typewriterTimeout;
-    
-    function typeWriter(text, element, speed = 25) {
-        clearTimeout(typewriterTimeout);
-        element.innerHTML = '';
-        
-        const textSpan = document.createElement('span');
-        const cursorSpan = document.createElement('span');
-        cursorSpan.className = 'typewriter-cursor';
-        
-        element.appendChild(textSpan);
-        element.appendChild(cursorSpan);
+// New elements
+const actionToolbar = document.getElementById("action-toolbar");
+const ttsBtn = document.getElementById("tts-btn");
+const voiceSelect = document.getElementById("voice-select");
+const audioContainer = document.getElementById("audio-container");
+const audioPlayer = document.getElementById("audio-player");
+const imageBtn = document.getElementById("image-btn");
+const imageContainer = document.getElementById("image-container");
+const generatedImage = document.getElementById("generated-image");
 
-        let i = 0;
-        function type() {
-            if (i < text.length) {
-                // Xử lý xuống dòng hiển thị đẹp hơn
-                if (text.charAt(i) === '\n') {
-                    textSpan.appendChild(document.createElement('br'));
-                } else {
-                    textSpan.appendChild(document.createTextNode(text.charAt(i)));
-                }
-                i++;
-                
-                // Randomize slightly for human-like typing speed
-                const delay = speed + Math.random() * 20;
-                typewriterTimeout = setTimeout(type, delay);
-            } else {
-                cursorSpan.style.animation = 'blink 1s step-end infinite';
-            }
-        }
-        
-        type();
+// State
+let currentGeneratedText = "";
+
+// ===================== SLIDER EVENTS =====================
+tempSlider.addEventListener("input", () => {
+    tempVal.textContent = tempSlider.value;
+});
+
+lengthSlider.addEventListener("input", () => {
+    lengthVal.textContent = lengthSlider.value;
+});
+
+// ===================== TYPEWRITER EFFECT =====================
+async function typewriterEffect(text, container) {
+    container.innerHTML = "";
+    const cursor = document.createElement("span");
+    cursor.className = "typewriter-cursor";
+
+    for (let i = 0; i < text.length; i++) {
+        container.textContent += text[i];
+        container.appendChild(cursor);
+        // Tốc độ gõ phím ngẫu nhiên tạo cảm giác tự nhiên
+        const delay = Math.random() * 20 + 10;
+        await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    // Giữ cursor nhấp nháy ở cuối
+    container.appendChild(cursor);
+}
+
+// ===================== SINH VĂN BẢN =====================
+generateBtn.addEventListener("click", async () => {
+    const prompt = promptInput.value.trim();
+    if (!prompt) {
+        outputBox.innerHTML = '<p class="placeholder-text">Xin hãy nhập câu mồi trước khi vận công...</p>';
+        return;
     }
 
-    generateBtn.addEventListener('click', async () => {
-        const prompt = promptInput.value.trim();
-        if (!prompt) {
-            outputBox.innerHTML = '<p class="placeholder-text" style="color: #ff6b6b;">Lão phu cần chút gợi ý (prompt) mới có thể suy diễn thiên cơ...</p>';
-            return;
-        }
+    // Disable & show loader
+    generateBtn.disabled = true;
+    loader.style.display = "inline-block";
+    generateBtn.querySelector(".btn-text").textContent = "Đang vận công...";
+    outputBox.innerHTML = '<p class="placeholder-text">Đang kết nối với thiên đạo...</p>';
 
-        // Set Loading State
-        generateBtn.disabled = true;
-        btnText.textContent = 'Đang Suy Diễn...';
-        loader.style.display = 'block';
-        outputBox.innerHTML = '<p class="placeholder-text">Khí đang tụ đan điền...</p>';
+    // Ẩn toolbar, audio, image khi sinh mới
+    actionToolbar.style.display = "none";
+    audioContainer.style.display = "none";
+    imageContainer.style.display = "none";
 
-        try {
-            // Gọi API local (Chắc chắn uvicorn đang chạy)
-            const response = await fetch('http://127.0.0.1:8000/generate', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    prompt: prompt,
-                    max_length: parseInt(lengthSlider.value),
-                    temperature: parseFloat(tempSlider.value),
-                    top_k: 40,
-                    top_p: 0.9,
-                    repetition_penalty: 1.15
-                })
-            });
+    try {
+        const res = await fetch(`${API_BASE}/generate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                prompt: prompt,
+                max_length: parseInt(lengthSlider.value),
+                temperature: parseFloat(tempSlider.value),
+            }),
+        });
+        const data = await res.json();
+        currentGeneratedText = data.generated_text;
+        await typewriterEffect(currentGeneratedText, outputBox);
 
-            if (!response.ok) {
-                throw new Error("Lạc lối trong luân hồi (Network Error)");
-            }
-
-            const data = await response.json();
-            
-            // Log nếu đang test mockup do chưa có model thực
-            if(data.status === "dummy_mode") {
-                console.warn("Đang chạy dummy mode (chưa có checkpoint GPT-2 thật).");
-            }
-            
-            typeWriter(data.generated_text, outputBox);
-
-        } catch (error) {
-            console.error(error);
-            outputBox.innerHTML = `<p class="placeholder-text" style="color: #ff6b6b;">Trúc cơ thất bại: ${error.message} <br><br> (Hãy chắc chắn bạn đã bật API server: <code>uvicorn api.app:app --reload</code>)</p>`;
-        } finally {
-            // Restore button
-            generateBtn.disabled = false;
-            btnText.textContent = 'Vận Công Sinh Chữ';
-            loader.style.display = 'none';
-        }
-    });
-
-    // Handle Enter key (Ctrl + Enter to trigger)
-    promptInput.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.key === 'Enter') {
-            generateBtn.click();
-        }
-    });
+        // Hiện thanh công cụ
+        actionToolbar.style.display = "flex";
+    } catch (err) {
+        outputBox.innerHTML = `<p style="color: #f87171;">⚠️ Lỗi kết nối: ${err.message}. Hãy đảm bảo API server đang chạy tại ${API_BASE}</p>`;
+    } finally {
+        generateBtn.disabled = false;
+        loader.style.display = "none";
+        generateBtn.querySelector(".btn-text").textContent = "⚔️ Vận Công Sinh Chữ";
+    }
 });
+
+// ===================== TEXT-TO-SPEECH =====================
+ttsBtn.addEventListener("click", async () => {
+    if (!currentGeneratedText) return;
+
+    const originalHTML = ttsBtn.innerHTML;
+    ttsBtn.disabled = true;
+    ttsBtn.innerHTML = '<span class="mini-loader"></span> Đang tạo giọng...';
+
+    try {
+        const res = await fetch(`${API_BASE}/tts`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                text: currentGeneratedText,
+                voice: voiceSelect.value,
+            }),
+        });
+        const data = await res.json();
+
+        if (data.status === "success") {
+            audioPlayer.src = `${API_BASE}${data.audio_url}`;
+            audioContainer.style.display = "block";
+            audioPlayer.play();
+        } else {
+            alert("Lỗi TTS: " + data.status);
+        }
+    } catch (err) {
+        alert("Lỗi kết nối TTS: " + err.message);
+    } finally {
+        ttsBtn.disabled = false;
+        ttsBtn.innerHTML = originalHTML;
+    }
+});
+
+// ===================== SINH ẢNH MINH HỌA =====================
+imageBtn.addEventListener("click", async () => {
+    if (!currentGeneratedText) return;
+
+    const originalHTML = imageBtn.innerHTML;
+    imageBtn.disabled = true;
+    imageBtn.innerHTML = '<span class="mini-loader"></span> Đang vẽ...';
+
+    try {
+        // Lấy 200 ký tự đầu làm mô tả cảnh
+        const sceneDesc = currentGeneratedText.substring(0, 200);
+
+        const res = await fetch(`${API_BASE}/generate-image`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ prompt: sceneDesc }),
+        });
+        const data = await res.json();
+
+        if (data.status === "success" && data.image_base64) {
+            generatedImage.src = `data:image/png;base64,${data.image_base64}`;
+            imageContainer.style.display = "block";
+        } else {
+            alert("Lỗi sinh ảnh: " + data.message);
+        }
+    } catch (err) {
+        alert("Lỗi kết nối Image API: " + err.message);
+    } finally {
+        imageBtn.disabled = false;
+        imageBtn.innerHTML = originalHTML;
+    }
+});
+
+// ===================== PARTICLES ANIMATION =====================
+// Tạo hạt bụi tu tiên trôi lững lờ
+const particlesContainer = document.getElementById("particles");
+// Particles are handled by CSS background animation
