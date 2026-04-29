@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tiên Đạo Kỷ Nguyên - AI Tạo Sinh Tiểu Thuyết</title>
-    <meta name="description" content="Nền tảng AI tạo sinh tiểu thuyết Kiếm Hiệp & Tu Tiên tiếng Việt với hình ảnh minh họa và giọng đọc">
+    <title>Tiên Đạo Kỷ Nguyên — AI Kiếm Hiệp Story Generator</title>
+    <meta name="description" content="Nền tảng AI tạo sinh truyện Kiếm Hiệp & Tu Tiên tiếng Việt với minh họa phân cảnh, lời thoại nhân vật và giọng đọc">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -17,10 +17,10 @@
     <main class="app-container">
         <header class="app-header">
             <h1 class="logo-title">Tiên Đạo Kỷ Nguyên</h1>
-            <p class="subtitle">AI Text Generation Platform - Wuxia & Xianxia</p>
+            <p class="subtitle">AI Kiếm Hiệp Story Generator — Script · Illustration · Voiceover</p>
         </header>
 
-        <!-- PANEL 1: SINH VĂN BẢN -->
+        <!-- PANEL: NHẬP PROMPT -->
         <div class="glass-panel main-panel">
             <div class="input-section">
                 <label for="prompt-input" class="section-label">Câu mồi (Prompt)</label>
@@ -28,61 +28,73 @@
                 
                 <div class="advanced-controls">
                     <div class="control-group">
-                        <label for="temp-slider">Sáng tạo (Temperature): <span id="temp-val">0.8</span></label>
-                        <input type="range" id="temp-slider" min="0.1" max="1.5" step="0.1" value="0.8">
+                        <label for="temp-slider">Sáng tạo (Temperature): <span id="temp-val">0.7</span></label>
+                        <input type="range" id="temp-slider" min="0.3" max="1.2" step="0.1" value="0.7">
                     </div>
                     <div class="control-group">
-                        <label for="length-slider">Độ dài (Tokens): <span id="length-val">150</span></label>
-                        <input type="range" id="length-slider" min="50" max="500" step="10" value="150">
-                    </div>
-                </div>
-
-                <button id="generate-btn" class="generate-btn">
-                    <span class="btn-text">⚔️ Vận Công Sinh Chữ</span>
-                    <span class="loader" id="loader"></span>
-                </button>
-            </div>
-
-            <div class="output-section">
-                <label class="section-label">Kết Quả Diễn Biến</label>
-                <div id="output-box" class="output-box">
-                    <p class="placeholder-text">Truyền vào đạo vận để xuất hiện nội dung...</p>
-                </div>
-
-                <!-- THANH CÔNG CỤ: ĐỌC + VẼ -->
-                <div class="action-toolbar" id="action-toolbar" style="display: none;">
-                    <!-- Giọng đọc -->
-                    <div class="toolbar-group">
+                        <label for="voice-select">Giọng đọc:</label>
                         <select id="voice-select" class="voice-select">
                             <option value="vi-VN-HoaiMyNeural">🎙️ Hoài My (Nữ)</option>
                             <option value="vi-VN-NamMinhNeural">🎙️ Nam Minh (Nam)</option>
                         </select>
-                        <button id="tts-btn" class="action-btn tts-btn" title="Đọc to nội dung">
-                            <span class="btn-icon">🔊</span>
-                            <span>Đọc Truyện</span>
-                        </button>
-                    </div>
-                    <!-- Sinh ảnh -->
-                    <div class="toolbar-group">
-                        <button id="image-btn" class="action-btn image-btn" title="Tạo ảnh minh họa">
-                            <span class="btn-icon">🎨</span>
-                            <span>Vẽ Minh Họa</span>
-                        </button>
                     </div>
                 </div>
 
-                <!-- Audio Player -->
-                <div id="audio-container" class="audio-container" style="display: none;">
-                    <audio id="audio-player" controls class="audio-player"></audio>
-                </div>
+                <button id="generate-btn" class="generate-btn">
+                    <span class="btn-text">⚔️ Tạo Truyện Hoàn Chỉnh</span>
+                    <span class="loader" id="loader"></span>
+                </button>
+            </div>
+        </div>
 
-                <!-- Ảnh minh họa -->
-                <div id="image-container" class="image-container" style="display: none;">
-                    <label class="section-label" style="margin-top: 12px;">🖼️ Ảnh Minh Họa</label>
-                    <div class="image-wrapper">
-                        <img id="generated-image" alt="Ảnh minh họa tiểu thuyết" class="generated-image">
+        <!-- PANEL: KẾT QUẢ TRUYỆN -->
+        <div class="glass-panel story-panel" id="story-panel" style="display: none;">
+            
+            <!-- Progress Tracker -->
+            <div class="progress-tracker" id="progress-tracker">
+                <div class="progress-steps" id="progress-steps">
+                    <div class="progress-step" id="step-init" data-step="0">
+                        <span class="step-dot"></span>
+                        <span>⏳ Khởi tạo...</span>
+                    </div>
+                    <div class="progress-step" id="step-script" data-step="1">
+                        <span class="step-dot"></span>
+                        <span>📝 Đang tạo kịch bản truyện...</span>
+                    </div>
+                    <div class="progress-step" id="step-parse" data-step="2">
+                        <span class="step-dot"></span>
+                        <span>✂️ Phân tích phân cảnh & lời thoại...</span>
+                    </div>
+                    <div class="progress-step" id="step-img" data-step="3">
+                        <span class="step-dot"></span>
+                        <span>🎨 Đang vẽ minh họa phân cảnh...</span>
+                    </div>
+                    <div class="progress-step" id="step-tts" data-step="4">
+                        <span class="step-dot"></span>
+                        <span>🔊 Đang tạo giọng đọc...</span>
+                    </div>
+                    <div class="progress-step" id="step-done" data-step="5">
+                        <span class="step-dot"></span>
+                        <span>✅ Hoàn tất!</span>
                     </div>
                 </div>
+                <div class="progress-bar-overall">
+                    <div class="progress-track">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Story Title -->
+            <h2 class="story-title" id="story-title" style="display: none;"></h2>
+
+            <!-- Nội dung truyện -->
+            <div id="story-content" class="story-content"></div>
+
+            <!-- Audio Player -->
+            <div id="audio-container" class="audio-container" style="display: none;">
+                <div class="audio-header">🔊 Giọng đọc truyện</div>
+                <audio id="audio-player" controls class="audio-player"></audio>
             </div>
         </div>
     </main>

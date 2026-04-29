@@ -3,164 +3,309 @@ const API_BASE = "http://localhost:8000";
 // ===================== DOM ELEMENTS =====================
 const promptInput = document.getElementById("prompt-input");
 const generateBtn = document.getElementById("generate-btn");
-const outputBox = document.getElementById("output-box");
 const loader = document.getElementById("loader");
 const tempSlider = document.getElementById("temp-slider");
 const tempVal = document.getElementById("temp-val");
-const lengthSlider = document.getElementById("length-slider");
-const lengthVal = document.getElementById("length-val");
-
-// New elements
-const actionToolbar = document.getElementById("action-toolbar");
-const ttsBtn = document.getElementById("tts-btn");
 const voiceSelect = document.getElementById("voice-select");
+
+const storyPanel = document.getElementById("story-panel");
+const storyTitle = document.getElementById("story-title");
+const storyContent = document.getElementById("story-content");
+const progressTracker = document.getElementById("progress-tracker");
+const progressFill = document.getElementById("progress-fill");
 const audioContainer = document.getElementById("audio-container");
 const audioPlayer = document.getElementById("audio-player");
-const imageBtn = document.getElementById("image-btn");
-const imageContainer = document.getElementById("image-container");
-const generatedImage = document.getElementById("generated-image");
+
+// Step elements
+const STEPS = [
+    document.getElementById("step-init"),
+    document.getElementById("step-script"),
+    document.getElementById("step-parse"),
+    document.getElementById("step-img"),
+    document.getElementById("step-tts"),
+    document.getElementById("step-done"),
+];
 
 // State
-let currentGeneratedText = "";
+let isGenerating = false;
 
-// ===================== SLIDER EVENTS =====================
+// ===================== SLIDER =====================
 tempSlider.addEventListener("input", () => {
     tempVal.textContent = tempSlider.value;
 });
 
-lengthSlider.addEventListener("input", () => {
-    lengthVal.textContent = lengthSlider.value;
-});
-
-// ===================== TYPEWRITER EFFECT =====================
-async function typewriterEffect(text, container) {
-    container.innerHTML = "";
-    const cursor = document.createElement("span");
-    cursor.className = "typewriter-cursor";
-
-    for (let i = 0; i < text.length; i++) {
-        container.textContent += text[i];
-        container.appendChild(cursor);
-        // Tốc độ gõ phím ngẫu nhiên tạo cảm giác tự nhiên
-        const delay = Math.random() * 20 + 10;
-        await new Promise(resolve => setTimeout(resolve, delay));
-    }
-    // Giữ cursor nhấp nháy ở cuối
-    container.appendChild(cursor);
+// ===================== UTILITY =====================
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// ===================== SINH VĂN BẢN =====================
+// ===================== PROGRESS =====================
+function setProgress(stepIndex, percent) {
+    progressFill.style.width = percent + "%";
+    
+    STEPS.forEach((el, i) => {
+        el.classList.remove("active", "done");
+        if (i < stepIndex) {
+            el.classList.add("done");
+        } else if (i === stepIndex) {
+            el.classList.add("active");
+        }
+    });
+}
+
+function updateStepLabel(stepIndex, newText) {
+    const stepEl = STEPS[stepIndex];
+    if (stepEl) {
+        const textSpan = stepEl.querySelectorAll("span")[1];
+        if (textSpan) textSpan.textContent = newText;
+    }
+}
+
+// ===================== TYPEWRITER (cho narration) =====================
+async function typewriterEffect(text, container) {
+    container.textContent = "";
+    const chunkSize = 3;
+    for (let i = 0; i < text.length; i += chunkSize) {
+        container.textContent += text.substring(i, i + chunkSize);
+        if (i % 9 === 0) {
+            await sleep(6);
+        }
+    }
+}
+
+// ===================== RENDER BLOCKS =====================
+async function renderBlocks(blocks, containerEl) {
+    for (const block of blocks) {
+        if (block.type === "dialogue") {
+            // Dialogue block
+            const dialogueEl = document.createElement("div");
+            dialogueEl.className = "block-dialogue";
+            dialogueEl.style.opacity = "0";
+            
+            if (block.speaker) {
+                const speakerEl = document.createElement("div");
+                speakerEl.className = "dialogue-speaker";
+                speakerEl.textContent = block.speaker;
+                dialogueEl.appendChild(speakerEl);
+            }
+            
+            const textEl = document.createElement("div");
+            textEl.className = "dialogue-text";
+            dialogueEl.appendChild(textEl);
+            containerEl.appendChild(dialogueEl);
+            
+            // Fade in
+            dialogueEl.style.transition = "opacity 0.5s ease";
+            await sleep(50);
+            dialogueEl.style.opacity = "1";
+            
+            // Typewriter cho dialogue
+            await typewriterEffect(block.text, textEl);
+            
+        } else {
+            // Narration block
+            const narrationEl = document.createElement("p");
+            narrationEl.className = "block-narration";
+            containerEl.appendChild(narrationEl);
+            
+            await typewriterEffect(block.text, narrationEl);
+        }
+        
+        await sleep(100);
+    }
+}
+
+// ===================== MAIN: TẠO TRUYỆN =====================
 generateBtn.addEventListener("click", async () => {
+    if (isGenerating) return;
     const prompt = promptInput.value.trim();
     if (!prompt) {
-        outputBox.innerHTML = '<p class="placeholder-text">Xin hãy nhập câu mồi trước khi vận công...</p>';
+        alert("Xin hãy nhập câu mồi trước khi tạo truyện!");
         return;
     }
 
-    // Disable & show loader
+    isGenerating = true;
     generateBtn.disabled = true;
     loader.style.display = "inline-block";
-    generateBtn.querySelector(".btn-text").textContent = "Đang vận công...";
-    outputBox.innerHTML = '<p class="placeholder-text">Đang kết nối với thiên đạo...</p>';
+    generateBtn.querySelector(".btn-text").textContent = "Đang tạo truyện...";
 
-    // Ẩn toolbar, audio, image khi sinh mới
-    actionToolbar.style.display = "none";
+    // Reset
+    storyPanel.style.display = "block";
+    storyContent.innerHTML = "";
+    storyTitle.style.display = "none";
     audioContainer.style.display = "none";
-    imageContainer.style.display = "none";
+    progressTracker.style.display = "block";
+    
+    // Reset step labels
+    updateStepLabel(3, "🎨 Đang vẽ minh họa phân cảnh...");
+    
+    // Cuộn xuống
+    storyPanel.scrollIntoView({ behavior: "smooth", block: "start" });
 
     try {
-        const res = await fetch(`${API_BASE}/generate`, {
+        // ========== BƯỚC 0: Khởi tạo ==========
+        setProgress(0, 5);
+        await sleep(400);
+        
+        // ========== BƯỚC 1: Sinh kịch bản ==========
+        setProgress(1, 10);
+        
+        const storyRes = await fetch(`${API_BASE}/generate-story`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 prompt: prompt,
-                max_length: parseInt(lengthSlider.value),
+                max_length: 800,
                 temperature: parseFloat(tempSlider.value),
             }),
         });
-        const data = await res.json();
-        currentGeneratedText = data.generated_text;
-        await typewriterEffect(currentGeneratedText, outputBox);
+        const storyData = await storyRes.json();
+        
+        if (!storyData.scenes || storyData.scenes.length === 0) {
+            throw new Error("Không thể tạo truyện. Thử lại với prompt khác.");
+        }
 
-        // Hiện thanh công cụ
-        actionToolbar.style.display = "flex";
+        // ========== BƯỚC 2: Phân tích ==========
+        setProgress(2, 25);
+        await sleep(600);
+        
+        // Hiển thị tiêu đề
+        storyTitle.textContent = storyData.title;
+        storyTitle.style.display = "block";
+        
+        const scenes = storyData.scenes;
+
+        // ========== BƯỚC 3: Hiển thị text + sinh ảnh ==========
+        setProgress(3, 30);
+
+        for (let i = 0; i < scenes.length; i++) {
+            const scene = scenes[i];
+            const progressPercent = 30 + ((i + 1) / scenes.length) * 45;
+
+            updateStepLabel(3, `🎨 Đang vẽ phân cảnh ${i + 1}/${scenes.length}...`);
+
+            // Tạo scene container
+            const sceneEl = document.createElement("div");
+            sceneEl.className = "story-scene";
+            sceneEl.style.animationDelay = `${i * 0.1}s`;
+
+            // Scene divider
+            const divider = document.createElement("div");
+            divider.className = "scene-divider";
+            divider.innerHTML = `<span>${scene.label}</span>`;
+            sceneEl.appendChild(divider);
+
+            // Blocks container
+            const blocksContainer = document.createElement("div");
+            blocksContainer.className = "scene-blocks";
+            sceneEl.appendChild(blocksContainer);
+
+            // Image wrapper (loading state)
+            const imgWrapper = document.createElement("div");
+            imgWrapper.className = "scene-image-wrapper loading";
+            const imgEl = document.createElement("img");
+            imgEl.className = "scene-image";
+            imgEl.alt = `Minh họa: ${scene.label}`;
+            imgEl.style.display = "none";
+            imgWrapper.appendChild(imgEl);
+            
+            const caption = document.createElement("div");
+            caption.className = "scene-image-caption";
+            caption.textContent = `Phân cảnh ${i + 1} / ${scenes.length}`;
+            
+            sceneEl.appendChild(imgWrapper);
+            sceneEl.appendChild(caption);
+            storyContent.appendChild(sceneEl);
+
+            // Render text blocks với typewriter
+            await renderBlocks(scene.blocks, blocksContainer);
+
+            // Sinh ảnh cho scene
+            setProgress(3, progressPercent);
+            
+            try {
+                const imgRes = await fetch(`${API_BASE}/generate-scene-image`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        prompt: scene.image_prompt,
+                        mood: scene.mood,
+                    }),
+                });
+                const imgData = await imgRes.json();
+
+                if (imgData.status === "success" && imgData.image_base64) {
+                    imgEl.src = `data:image/png;base64,${imgData.image_base64}`;
+                    imgEl.style.display = "block";
+                    imgWrapper.classList.remove("loading");
+                } else {
+                    imgWrapper.classList.remove("loading");
+                    imgWrapper.style.display = "none";
+                    caption.textContent = "⚠️ Không thể tạo ảnh cho phân cảnh này";
+                }
+            } catch (imgErr) {
+                console.error("Image error:", imgErr);
+                imgWrapper.classList.remove("loading");
+                imgWrapper.style.display = "none";
+                caption.textContent = "⚠️ Lỗi khi tạo ảnh minh họa";
+            }
+
+            // Cuộn tới scene mới
+            sceneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        // ========== BƯỚC 4: TTS ==========
+        setProgress(4, 80);
+
+        try {
+            // Tạo full text cho TTS (chỉ lấy narration + dialogue text)
+            let ttsText = "";
+            for (const scene of scenes) {
+                for (const block of scene.blocks) {
+                    if (block.type === "dialogue" && block.speaker) {
+                        ttsText += `${block.speaker} nói: "${block.text}" `;
+                    } else {
+                        ttsText += block.text + " ";
+                    }
+                }
+            }
+            
+            const ttsRes = await fetch(`${API_BASE}/tts`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    text: ttsText.trim(),
+                    voice: voiceSelect.value,
+                }),
+            });
+            const ttsData = await ttsRes.json();
+
+            if (ttsData.status === "success") {
+                audioPlayer.src = `${API_BASE}${ttsData.audio_url}`;
+                audioContainer.style.display = "block";
+                audioPlayer.play().catch(e => {
+                    console.log("Auto-play blocked:", e);
+                });
+            }
+        } catch (ttsErr) {
+            console.error("TTS error:", ttsErr);
+        }
+
+        // ========== BƯỚC 5: Hoàn tất ==========
+        setProgress(5, 100);
+        await sleep(2000);
+        progressTracker.style.display = "none";
+
     } catch (err) {
-        outputBox.innerHTML = `<p style="color: #f87171;">⚠️ Lỗi kết nối: ${err.message}. Hãy đảm bảo API server đang chạy tại ${API_BASE}</p>`;
+        storyContent.innerHTML = `<div class="error-message">
+            ⚠️ Lỗi: ${err.message}
+            <small>Hãy đảm bảo API server đang chạy tại ${API_BASE}</small>
+        </div>`;
+        progressTracker.style.display = "none";
     } finally {
+        isGenerating = false;
         generateBtn.disabled = false;
         loader.style.display = "none";
-        generateBtn.querySelector(".btn-text").textContent = "⚔️ Vận Công Sinh Chữ";
+        generateBtn.querySelector(".btn-text").textContent = "⚔️ Tạo Truyện Hoàn Chỉnh";
     }
 });
-
-// ===================== TEXT-TO-SPEECH =====================
-ttsBtn.addEventListener("click", async () => {
-    if (!currentGeneratedText) return;
-
-    const originalHTML = ttsBtn.innerHTML;
-    ttsBtn.disabled = true;
-    ttsBtn.innerHTML = '<span class="mini-loader"></span> Đang tạo giọng...';
-
-    try {
-        const res = await fetch(`${API_BASE}/tts`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                text: currentGeneratedText,
-                voice: voiceSelect.value,
-            }),
-        });
-        const data = await res.json();
-
-        if (data.status === "success") {
-            audioPlayer.src = `${API_BASE}${data.audio_url}`;
-            audioContainer.style.display = "block";
-            audioPlayer.play();
-        } else {
-            alert("Lỗi TTS: " + data.status);
-        }
-    } catch (err) {
-        alert("Lỗi kết nối TTS: " + err.message);
-    } finally {
-        ttsBtn.disabled = false;
-        ttsBtn.innerHTML = originalHTML;
-    }
-});
-
-// ===================== SINH ẢNH MINH HỌA =====================
-imageBtn.addEventListener("click", async () => {
-    if (!currentGeneratedText) return;
-
-    const originalHTML = imageBtn.innerHTML;
-    imageBtn.disabled = true;
-    imageBtn.innerHTML = '<span class="mini-loader"></span> Đang vẽ...';
-
-    try {
-        // Lấy 200 ký tự đầu làm mô tả cảnh
-        const sceneDesc = currentGeneratedText.substring(0, 200);
-
-        const res = await fetch(`${API_BASE}/generate-image`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: sceneDesc }),
-        });
-        const data = await res.json();
-
-        if (data.status === "success" && data.image_base64) {
-            generatedImage.src = `data:image/png;base64,${data.image_base64}`;
-            imageContainer.style.display = "block";
-        } else {
-            alert("Lỗi sinh ảnh: " + data.message);
-        }
-    } catch (err) {
-        alert("Lỗi kết nối Image API: " + err.message);
-    } finally {
-        imageBtn.disabled = false;
-        imageBtn.innerHTML = originalHTML;
-    }
-});
-
-// ===================== PARTICLES ANIMATION =====================
-// Tạo hạt bụi tu tiên trôi lững lờ
-const particlesContainer = document.getElementById("particles");
-// Particles are handled by CSS background animation

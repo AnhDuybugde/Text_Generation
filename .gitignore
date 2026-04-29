@@ -11,19 +11,15 @@ build/
 # ===== Data (too large for git) =====
 data/raw/
 data/processed/corpus.txt
-data.zip
-models.zip
+data/processed/dataset.pt
 
 # ===== Model weights (too large for git) =====
 models/finetuned_checkpoint/
 models/tokenizer/
-gpt2-epoch-10/
 
 # ===== Temp files =====
 temp_media/
 *.log
-training_error.txt
-out.log
 
 # ===== IDE =====
 .vscode/
